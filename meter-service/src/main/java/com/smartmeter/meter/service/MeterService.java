@@ -3,6 +3,7 @@ package com.smartmeter.meter.service;
 import com.smartmeter.meter.dto.MeterReadingRequest;
 import com.smartmeter.meter.entity.MeterReading;
 import com.smartmeter.meter.repository.MeterReadingRepository;
+import com.smartmeter.meter.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,12 @@ public class MeterService {
     }
 
     public List<MeterReading> getReadings(String meterId) {
-        return repository.findByMeterId(meterId);
+        List<MeterReading> readings = repository.findByMeterId(meterId);
+
+    if (readings.isEmpty()) {
+        throw new ResourceNotFoundException("No readings found for meterId: " + meterId);
+    }
+
+    return readings;
     }
 }
